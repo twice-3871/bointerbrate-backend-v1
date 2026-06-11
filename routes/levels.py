@@ -1,6 +1,8 @@
 import db
+from services import auth_service
 from schemas import level
 from fastapi import APIRouter
+from fastapi import Depends, HTTPException
 
 levels_router = APIRouter(prefix="/levels", tags=["levels"])
 
@@ -31,21 +33,27 @@ async def root(level_type: level.LevelType):
 
 
 @levels_router.post("/")
-async def add_level(level: level.CreateLevel):
+async def add_level(
+    level: level.CreateLevel,
+    discord_id: str = Depends(auth_service.get_current_user)
+    ):
     if level.level_pos <= 0:
         level.level_pos = 1
 
-
-    level_row = db.fetch_one("""
-    INSERT INTO levels 
-    (type_of_level, 
-    level_name, 
-    creator, 
-    level_id, 
-    song, 
-    verification_url) VALUES 
-    (%s, %s, %s, %s, %s, %s) 
-    RETURNING id""", (level.level_type, level.level_name, level.level_creator, level.level_id, level.level_song, level.level_verification_url,))
+    try:
+        level_row = db.fetch_one("""
+        INSERT INTO levels 
+        (type_of_level, 
+        level_name, 
+        creator, 
+        level_id, 
+        song, 
+        verification_url) VALUES 
+        (%s, %s, %s, %s, %s, %s) 
+        RETURNING id""", (level.level_type, level.level_name, level.level_creator, level.level_id, level.level_song, level.level_verification_url,))
+    except Exception:
+        print("DB insert failed:", Exception)
+        raise HTTPException(status_code=400, detail="Invalid level data")
 
 
     find_other_lvls_pos = db.fetch_all("""

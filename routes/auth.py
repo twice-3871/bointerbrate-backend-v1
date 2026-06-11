@@ -2,13 +2,14 @@ import db
 import os
 import httpx
 import jwt
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from fastapi import APIRouter
 from services import user_service
+from services import auth_service
 
 security        = HTTPBearer()
 CLIENT_ID       = os.getenv("CLIENT_ID")
@@ -17,12 +18,6 @@ CALLBACK_URL    = "http://localhost:8000/auth/callback"
 SECRET_KEY      = os.getenv("SECERT_KEY")
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
-
-def decode_token(token: str):
-    try:
-        return jwt.decode(token, SECRET_KEY, algorithms="HS256")
-    except jwt.InvalidTokenError:
-        return None
 
 @auth_router.get("/login")
 async def login():
@@ -93,8 +88,7 @@ async def callback(code: str):
 @auth_router.get("/me")
 async def get_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
-    data = decode_token(token)
-    print(data)
+    data = auth_service.decode_token(token)
 
     if not data:
         raise HTTPException(status_code=401, detail="Invalid Token")
@@ -106,7 +100,6 @@ async def get_user(credentials: HTTPAuthorizationCredentials = Depends(security)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    print(user)
     
     return {
         "id": user['discord_id'],

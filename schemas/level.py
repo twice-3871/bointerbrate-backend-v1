@@ -7,7 +7,7 @@ class LevelType(str, Enum):
     platformer = "platformer"
 
 class CreateLevel(BaseModel):
-    level_type: str
+    level_type: LevelType
     level_name: str
     level_creator: str
     level_song: str
