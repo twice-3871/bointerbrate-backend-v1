@@ -40,4 +40,6 @@ def get_current_user(
     if not is_allowed(discord_id):
         raise HTTPException(status_code=403, detail="Not allowed")
     
-    return discord_id
+    return {
+        "discord_id": discord_id
+    }
