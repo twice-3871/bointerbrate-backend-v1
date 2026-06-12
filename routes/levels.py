@@ -31,6 +31,52 @@ async def root(level_type: level.LevelType):
     
     return levels
 
+@levels_router.delete("/{level_id}")
+def delete_level(
+    level_id: int,
+    discord_id: str = Depends(auth_service.get_current_user)):
+
+    find_level = db.fetch_one(
+        """
+        SELECT 
+        levels.*, 
+        level_positions.level_pos 
+        FROM levels 
+        INNER JOIN level_positions
+        ON levels.id = level_positions.level_id
+        WHERE levels.level_id = %s;
+        """, (level_id,)
+    )
+
+    print(find_level)
+
+    deleted_pos = find_level["level_pos"]
+    deleted_type = find_level["type_of_level"]
+
+    db.execute(
+    """
+    DELETE FROM levels
+    WHERE level_id = %s
+    """, (level_id,)
+    )
+
+
+    db.execute(
+    """
+    UPDATE level_positions
+    SET level_pos = level_pos - 1
+    WHERE type_of_level = %s
+    AND level_pos > %s
+    """, (
+        deleted_type,
+        deleted_pos,
+    ))
+
+
+    return {"Success": True}
+
+
+
 
 @levels_router.post("/")
 async def add_level(
@@ -54,7 +100,6 @@ async def add_level(
     except Exception:
         print("DB insert failed:", Exception)
         raise HTTPException(status_code=400, detail="Invalid level data")
-
 
     find_other_lvls_pos = db.fetch_all("""
     SELECT * FROM level_positions 
@@ -86,3 +131,4 @@ async def add_level(
         "message": "Level added!",
         "level": level
     }
+

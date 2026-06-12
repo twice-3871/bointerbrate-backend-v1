@@ -11,7 +11,15 @@ submission_router = APIRouter(prefix="/submit", tags=["submit"])
 def get_all_submissions():
     return  db.fetch_all(
         """
-        SELECT * FROM user_record_submissions
+        SELECT 
+            users.username, 
+            levels.level_name, 
+            user_record_submissions.*
+        FROM user_record_submissions
+        INNER JOIN users
+        ON user_record_submissions.user_id = users.discord_id 
+        INNER JOIN levels
+        ON user_record_submissions.level_id = levels.level_id;
         """
     )
 
@@ -50,3 +58,31 @@ def post_submission(
         "submission": submission
     }
 
+@submission_router.patch("/{submission_id}/approve")
+def approve_submission(
+    submission_id: int,
+    discord_id: str = Depends(auth_service.get_current_user)):
+
+    db.execute(
+        """
+        UPDATE user_record_submissions
+        SET status = 'approved'
+        WHERE id = %s;
+        """, (submission_id,)
+    )
+
+    return {"success": True}
+
+@submission_router.patch("/{submission_id}/reject")
+def reject_submission(
+    submission_id: int,
+    discord_id: str = Depends(auth_service.get_current_user)):
+    db.execute(
+        """
+        UPDATE user_record_submissions
+        SET status = 'approved'
+        WHERE id = %s;
+        """, (submission_id,)
+    )
+
+    return {"success": True}
