@@ -6,8 +6,8 @@ from fastapi import Depends, HTTPException
 
 levels_router = APIRouter(prefix="/levels", tags=["levels"])
 
-@levels_router.get("/")
-async def root():
+@levels_router.get("/all")
+async def get_all_levels():
     levels = db.fetch_all("""
     SELECT levels.*, level_positions.level_pos
     FROM levels
@@ -18,8 +18,38 @@ async def root():
     
     return levels
 
-@levels_router.get("/{level_type}")
-async def root(level_type: level.LevelType):
+@levels_router.get("/{level_id}")
+async def get_a_level_and_its_records(level_id: int):
+    levels = db.fetch_one("""
+    SELECT levels.*, level_positions.level_pos
+    FROM levels
+    INNER JOIN level_positions
+    ON levels.id = level_positions.level_id
+    WHERE levels.level_id = %s
+    """, (level_id,))
+
+    level_records = db.fetch_all(
+        """
+        SELECT user_record_submissions.progress,
+        user_record_submissions.video_url,
+        user_record_submissions.created_at,
+        users.username
+        FROM levels
+        INNER JOIN user_record_submissions
+        ON user_record_submissions.level_id = levels.level_id AND user_record_submissions.status = 'approved'
+        INNER JOIN users
+        ON user_record_submissions.user_id = users.discord_id
+        WHERE levels.level_id = %s;
+        """, (level_id,)
+    )
+    
+    return {
+        "Level": levels,
+        "Records": level_records
+    }
+
+@levels_router.get("/{level_type}/all")
+async def get_all_levels_speific_type(level_type: level.LevelType):
     levels = db.fetch_all("""
     SELECT levels.*, level_positions.level_pos
     FROM levels
