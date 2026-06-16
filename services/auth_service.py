@@ -15,13 +15,11 @@ def decode_token(token: str):
         return None
 
 def is_allowed(discord_id: str):
-    user = db.fetch_one(
+    return db.fetch_one(
         """
-        SELECT discord_id FROM allowed_users WHERE discord_id = %s
+        SELECT 1 FROM allowed_users WHERE discord_id = %s
         """, (discord_id,)
-    )
-
-    return user is not None
+    ) is not None
 
 def get_current_user(
     creds: HTTPAuthorizationCredentials = Depends(security)
@@ -40,6 +38,4 @@ def get_current_user(
     if not is_allowed(discord_id):
         raise HTTPException(status_code=403, detail="Not allowed")
     
-    return {
-        "discord_id": discord_id
-    }
+    return discord_id

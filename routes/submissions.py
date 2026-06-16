@@ -83,7 +83,7 @@ def reject_submission(
     db.execute(
         """
         UPDATE user_record_submissions
-        SET status = 'reject'
+        SET status = 'rejected'
         WHERE id = %s;
         """, (submission_id,)
     )

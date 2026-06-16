@@ -113,6 +113,7 @@ async def add_level(
     level: level.CreateLevel,
     discord_id: str = Depends(auth_service.get_current_user)
     ):
+
     if level.level_pos <= 0:
         level.level_pos = 1
 
