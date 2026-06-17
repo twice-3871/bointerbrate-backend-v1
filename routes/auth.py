@@ -82,7 +82,7 @@ async def callback(code: str):
 
 
     return RedirectResponse(
-        url=f"http://localhost:5173/auth/callback?token={jwt_token}"
+        url=f"https://test.bointerbrate.meme/auth/callback?token={jwt_token}"
     )
 
 @auth_router.get("/me")
