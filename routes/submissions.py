@@ -27,9 +27,6 @@ def get_all_submissions():
 def post_submission(
     User_submission: submission.CreateSubmissionModel,
     current_user = Depends(auth_service.get_current_user)):
-    if DEBUG and submisson.user_id:
-        discord_id = submission.user_id
-
     try:
         db.execute(
             """
