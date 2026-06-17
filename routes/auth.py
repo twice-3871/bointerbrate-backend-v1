@@ -14,8 +14,8 @@ from services import auth_service
 security        = HTTPBearer()
 CLIENT_ID       = os.getenv("CLIENT_ID")
 CLIENT_SECRET   = os.getenv("CLIENT_SECRET")
-CALLBACK_URL    = "http://localhost:8000/auth/callback"
-SECRET_KEY      = os.getenv("SECERT_KEY")
+CALLBACK_URL    = os.getenv("CALLBACK_URL")
+SECRET_KEY      = os.getenv("SECRET_KEY")
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 

@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 security    = HTTPBearer()
-SECRET_KEY  = os.getenv("SECERT_KEY")
+SECRET_KEY  = os.getenv("SECRET_KEY")
 
 
 def decode_token(token: str):
