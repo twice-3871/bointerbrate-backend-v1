@@ -32,6 +32,8 @@ def post_submission(
     print("PROGRESS:", User_submission.progress)
     print("VIDEO:", User_submission.video_url)
 
+    print("User:", current_user)
+
     try:
         db.execute(
             """
