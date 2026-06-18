@@ -26,7 +26,7 @@ def get_all_submissions():
 @submission_router.post("/")
 def post_submission(
     User_submission: submission.CreateSubmissionModel,
-    current_user = Depends(auth_service.get_current_user)):
+    current_user = Depends(auth_service.require_allowed_user)):
 
     try:
         db.execute(
@@ -62,7 +62,7 @@ def post_submission(
 @submission_router.patch("/{submission_id}/approve")
 def approve_submission(
     submission_id: int,
-    discord_id: str = Depends(auth_service.get_current_user)):
+    discord_id: str = Depends(auth_service.require_allowed_user)):
 
     db.execute(
         """
@@ -77,7 +77,7 @@ def approve_submission(
 @submission_router.patch("/{submission_id}/reject")
 def reject_submission(
     submission_id: int,
-    discord_id: str = Depends(auth_service.get_current_user)):
+    discord_id: str = Depends(auth_service.require_allowed_user)):
     db.execute(
         """
         UPDATE user_record_submissions

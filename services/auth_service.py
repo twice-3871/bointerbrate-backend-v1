@@ -33,13 +33,15 @@ def get_current_user(
         raise HTTPException(status_code=401, detail="Token experied")
     except Exception:
         raise HTTPException(status_code=401, detail="Invaild token")
-    
 
-    if not is_allowed(discord_id):
-        raise HTTPException(status_code=403, detail="Not allowed")
     
     return db.fetch_one(
         """
         SELECT discord_id, username FROM users WHERE discord_id = %s
         """, (discord_id)
     )
+
+def require_allowed_user(user=Depends(get_current_user)):
+    if not is_allowed(user["discord_id"]):
+        raise HTTPException(403, "Not allowed")
+    return user

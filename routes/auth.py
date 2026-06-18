@@ -111,7 +111,7 @@ async def get_user(credentials: HTTPAuthorizationCredentials = Depends(security)
         "id": user['discord_id'],
         "username": user['username'],
         "avatar": user['avatar'],
-        "is_allowed": bool(auth_service.is_allowed(discord_id))
+        "is_allowed": bool(auth_service.is_allowed["discord_id"])
     }
 
 
