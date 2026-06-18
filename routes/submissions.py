@@ -42,7 +42,7 @@ def post_submission(
             video_url,
             status) VALUES (%s, %s, %s, %s, %s)
             """, (
-                current_user,
+                current_user['discord_id'],
                 User_submission.level_id,
                 User_submission.progress,
                 User_submission.video_url,
