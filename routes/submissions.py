@@ -28,7 +28,9 @@ def post_submission(
     User_submission: submission.CreateSubmissionModel,
     current_user = Depends(auth_service.require_allowed_user)):
 
-    print(User_submission)
+    print("LEVEL ID:", User_submission.level_id)
+    print("PROGRESS:", User_submission.progress)
+    print("VIDEO:", User_submission.video_url)
 
     try:
         db.execute(
@@ -55,6 +57,8 @@ def post_submission(
         """
         SELECT * FROM user_record_submissions WHERE level_id = %s
         """, (User_submission.level_id,))
+    
+    print("Submission:", submission)
     
     return {
         "message": "Success!",
