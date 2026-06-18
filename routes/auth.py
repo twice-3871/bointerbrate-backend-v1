@@ -88,7 +88,7 @@ async def callback(code: str):
 
     print(jwt_token)
     return RedirectResponse(
-        url=f"https://test.bointerbrate.meme/auth/callback?token={jwt_token}"
+        url=f"https://test.bointerbrate.meme/auth/callback#token={jwt_token}"
     )
 
 @auth_router.get("/me")
