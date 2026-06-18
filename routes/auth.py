@@ -31,6 +31,8 @@ async def login():
 
 @auth_router.get("/callback")
 async def callback(code: str):
+    print("OAuth callback hit:", code)
+    
     async with httpx.AsyncClient() as client:
         token_response = await client.post(
             "https://discord.com/api/oauth2/token",
