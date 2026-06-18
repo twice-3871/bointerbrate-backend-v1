@@ -28,8 +28,6 @@ def post_submission(
     User_submission: submission.CreateSubmissionModel,
     current_user = Depends(auth_service.get_current_user)):
 
-    print(current_user)
-    
     try:
         db.execute(
             """
@@ -40,7 +38,7 @@ def post_submission(
             video_url,
             status) VALUES (%s, %s, %s, %s, %s)
             """, (
-                current_user["discord_id"],
+                current_user,
                 User_submission.level_id,
                 User_submission.progress,
                 User_submission.video_url,
