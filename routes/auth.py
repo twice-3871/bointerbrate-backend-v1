@@ -86,7 +86,7 @@ async def callback(code: str):
         algorithm="HS256"
     )
 
-
+    print(jwt_token)
     return RedirectResponse(
         url=f"https://test.bointerbrate.meme/auth/callback?token={jwt_token}"
     )
