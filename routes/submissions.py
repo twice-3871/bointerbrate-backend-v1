@@ -28,6 +28,8 @@ def post_submission(
     User_submission: submission.CreateSubmissionModel,
     current_user = Depends(auth_service.require_allowed_user)):
 
+    print(User_submission)
+
     try:
         db.execute(
             """
