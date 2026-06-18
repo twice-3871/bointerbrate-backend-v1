@@ -102,7 +102,6 @@ async def get_user(credentials: HTTPAuthorizationCredentials = Depends(security)
     discord_id = data["discord_id"]
 
     user = user_service.get_user_by_discord_id(discord_id)
-    can_do = auth_service.is_allowed(discord_id)
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -112,7 +111,7 @@ async def get_user(credentials: HTTPAuthorizationCredentials = Depends(security)
         "id": user['discord_id'],
         "username": user['username'],
         "avatar": user['avatar'],
-        "is_allowed": can_do
+        "is_allowed": bool(auth_service.is_allowed(discord_id))
     }
 
 
