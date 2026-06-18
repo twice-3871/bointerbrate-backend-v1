@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.levels import levels_router
 from routes.auth import auth_router
 from routes.submissions import submission_router
+from fastapi.staticfiles import StaticFiles
+
 
 
 app = FastAPI()
@@ -16,6 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.mount("/", StaticFiles(directory="public", html=False), name="static")
+
 
 app.include_router(levels_router)
 app.include_router(auth_router)
