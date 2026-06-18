@@ -45,6 +45,7 @@ async def callback(code: str):
         )
 
         data = token_response.json()
+        print(data)
 
         if "access_token" not in data:
             print("Discord OAuth failed: ", data)
