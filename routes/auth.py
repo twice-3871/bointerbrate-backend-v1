@@ -32,7 +32,7 @@ async def login():
 @auth_router.get("/callback")
 async def callback(code: str):
     print("OAuth callback hit:", code)
-    
+
     async with httpx.AsyncClient() as client:
         token_response = await client.post(
             "https://discord.com/api/oauth2/token",
@@ -51,6 +51,9 @@ async def callback(code: str):
 
         if "access_token" not in data:
             print("Discord OAuth failed: ", data)
+            print(token_response.status_code)
+            print(token_response.headers)
+            print(token_response.text)
             raise HTTPException(status_code=400, detail="OAuth failed")
 
         token = data["access_token"]
