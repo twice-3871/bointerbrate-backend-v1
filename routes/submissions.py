@@ -27,6 +27,9 @@ def get_all_submissions():
 def post_submission(
     User_submission: submission.CreateSubmissionModel,
     current_user = Depends(auth_service.get_current_user)):
+
+    print(current_user)
+    
     try:
         db.execute(
             """
