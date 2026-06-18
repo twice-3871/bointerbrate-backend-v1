@@ -38,4 +38,8 @@ def get_current_user(
     if not is_allowed(discord_id):
         raise HTTPException(status_code=403, detail="Not allowed")
     
-    return discord_id
+    return db.fetch_one(
+        """
+        SELECT discord_id, username FROM users WHERE discord_id = %s
+        """, (discord_id)
+    )
