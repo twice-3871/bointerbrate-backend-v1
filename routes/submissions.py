@@ -64,7 +64,15 @@ def approve_submission(
     submission_id: int,
     discord_id: str = Depends(auth_service.require_allowed_user)):
 
-    return {"ok": True}
+    db.execute(
+        """
+        UPDATE user_record_submissions
+        SET status = 'approved'
+        WHERE id = %s;
+        """, (submission_id,)
+    )
+
+   
 
 @submission_router.patch("/{submission_id}/reject")
 def reject_submission(

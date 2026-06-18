@@ -38,7 +38,7 @@ def get_current_user(
     return db.fetch_one(
         """
         SELECT discord_id, username FROM users WHERE discord_id = %s
-        """, (discord_id)
+        """, (discord_id,)
     )
 
 def require_allowed_user(user=Depends(get_current_user)):
