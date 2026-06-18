@@ -45,15 +45,13 @@ async def callback(code: str):
             },
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
+        print(token_response)
 
         data = token_response.json()
         print(data)
 
         if "access_token" not in data:
             print("Discord OAuth failed: ", data)
-            print(token_response.status_code)
-            print(token_response.headers)
-            print(token_response.text)
             raise HTTPException(status_code=400, detail="OAuth failed")
 
         token = data["access_token"]
