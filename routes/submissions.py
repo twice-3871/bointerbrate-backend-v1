@@ -26,7 +26,7 @@ def get_all_submissions():
 @submission_router.post("/")
 def post_submission(
     User_submission: submission.CreateSubmissionModel,
-    current_user = Depends(auth_service.require_allowed_user)):
+    current_user = Depends(auth_service.get_current_user)):
 
     print("LEVEL ID:", User_submission.level_id)
     print("PROGRESS:", User_submission.progress)
